@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبارات مدرسة المروة الخاصة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #4a9ae9;
+            --accent-color: #ff9800;
+            --light-color: #f5f9ff;
+            --dark-color: #1a365d;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-color);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 30px;
+        }
+
+        .arabic-icon {
+            font-size: 2rem;
+            margin: 0 10px;
+            color: var(--accent-color);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .level-indicator {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .level-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .level-progress {
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            border-radius: 6px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .level-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            background: var(--light-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        .question-number {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark-color);
+            line-height: 1.8;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 18px 20px;
+            background: var(--light-color);
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #e8f0fe;
+            border-color: var(--secondary-color);
+        }
+
+        .option.selected {
+            background: #e3f2fd;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .option.correct {
+            background: #e8f5e9;
+            border-color: var(--success-color);
+        }
+
+        .option.incorrect {
+            background: #ffebee;
+            border-color: var(--error-color);
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            margin-left: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            border: 2px solid #ddd;
+        }
+
+        .selected .option-label {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(44, 90, 160, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f1f1;
+            color: var(--dark-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .result-score {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 20px 0;
+        }
+
+        .result-message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .level-up {
+            background: linear-gradient(135deg, #ff9800, #ffc107);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .start-screen h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+
+        .start-screen p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-start {
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(44, 90, 160, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .quiz-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .level-indicator {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .level-progress {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- رأس الصفحة -->
+        <header class="header">
+            <img src="494275283_1214564460680371_166123743920553506_n.jpg" alt="اختبار اللغة العربية" class="arabic-icon">
+            <h1> اختبارات الفصل الدراسي الأول </h1>
+            <p>إعداد / أ.مـحـمود مــحـمــد عــطـيـة</p>
+        </header>
+
+        <!-- لوحة المعلومات -->
+        <div class="dashboard">
+            <div class="card">
+                <h3><i class="fas fa-layer-group"></i> المستوى الحالي</h3>
+                <div class="value" id="currentLevel">1</div>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-question-circle"></i> الأسئلة المتبقية</h3>
+                <div class="value" id="remainingQuestions">10</div>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-star"></i> النقاط المحققة</h3>
+                <div class="value" id="score">0</div>
+            </div>
+        </div>
+
+        <!-- مؤشر التقدم -->
+        <div class="level-indicator">
+            <div class="level-info">
+                <h3>تقدم المستوى</h3>
+                <p>أكمل الأسئلة للانتقال للمستوى التالي</p>
+            </div>
+            <div class="level-progress">
+                <div class="progress-bar">
+                    <div class="progress" id="levelProgress"></div>
+                </div>
+            </div>
+            <div class="level-number" id="levelNumber">1</div>
+        </div>
+
+        <!-- شاشة البدء -->
+        <div class="start-screen" id="startScreen">
+            <h2>مرحبًا بك في اختبار اللغة العربية</h2>
+            <p>يتكون الاختبار من مستويات متعددة، كل مستوى يحتوي على 10 أسئلة متنوعة في قواعد اللغة العربية، الأدب، البلاغة والمفردات. يجب الإجابة على جميع أسئلة المستوى الحالي للانتقال للمستوى التالي.</p>
+            <button class="btn-start" id="startBtn">
+                <i class="fas fa-play-circle"></i> بدء الاختبار
+            </button>
+        </div>
+
+        <!-- قسم الأسئلة -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="question-header">
+                <div class="question-number">السؤال <span id="questionNum">1</span> من 10</div>
+                <div class="level-badge">المستوى <span id="questionLevel">1</span></div>
+            </div>
+            
+            <div class="question-text" id="questionText"></div>
+            
+            <div class="options-container" id="optionsContainer">
+                <!-- سيتم إضافة الخيارات هنا عبر JavaScript -->
+            </div>
+            
+            <div class="quiz-controls">
+                <button class="btn btn-secondary" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-right"></i> السابق
+                </button>
+                <button class="btn btn-primary" id="nextBtn">
+                    التالي <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- شاشة النتائج -->
+        <div class="result-container" id="resultContainer">
+            <div class="result-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="result-title" id="resultTitle">أحسنت! لقد أكملت المستوى</h2>
+            <div class="result-score" id="resultScore">0/10</div>
+            <div class="result-message" id="resultMessage"></div>
+            <div id="levelUpMessage" class="level-up" style="display: none;">مستوى جديد! تهانينا</div>
+            <div style="margin-top: 30px;">
+                <button class="btn btn-primary" id="continueBtn" style="display: none;">
+                    الاستمرار للمستوى التالي <i class="fas fa-arrow-left"></i>
+                </button>
+                <button class="btn btn-secondary" id="restartBtn">
+                    <i class="fas fa-redo"></i> إعادة الاختبار
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الأسئلة لكل مستوى
+        const questionsData = {
+            1: [
+                {
+                    question: "ما نوع الجمع في كلمة 'مُعَلِّمُونَ'؟",
+                    options: ["جمع مذكر سالم", "جمع مؤنث سالم", "جمع تكسير", "مفرد"],
+                    correct: 0
+                },
+                {
+                    question: "ما إعراب كلمة 'الطالبُ' في جملة 'الطالبُ مجتهدٌ'؟",
+                    options: ["مبتدأ مرفوع", "خبر مرفوع", "فاعل مرفوع", "مفعول به منصوب"],
+                    correct: 0
+                },
+                {
+                    question: "ما ضد كلمة 'الليل'؟",
+                    options: ["النهار", "الظلام", "القمر", "النجوم"],
+                    correct: 0
+                },
+                {
+                    question: "ما نوع الهمزة في كلمة 'أَكَلَ'؟",
+                    options: ["همزة قطع", "همزة وصل", "همزة متوسطة", "همزة متطرفة"],
+                    correct: 0
+                },
+                {
+                    question: "ما مفرد كلمة 'أَطْفَال'؟",
+                    options: ["طِفْل", "طُفْل", "طَفْل", "طَفِيل"],
+                    correct: 0
+                },
+                {
+                    question: "ما جمع كلمة 'كِتَاب'؟",
+                    options: ["كُتُب", "كِتَابَات", "كُتَّاب", "كِتَابُونَ"],
+                    correct: 0
+                },
+                {
+                    question: "ما الفعل الأمر من الفعل 'يَكْتُبُ'؟",
+                    options: ["اُكْتُبْ", "كُتِبَ", "اِكْتَبْ", "كَتَّبَ"],
+                    correct: 0
+                },
+                {
+                    question: "ما نوع الجملة 'الجَوُّ مُشْمِسٌ'؟",
+                    options: ["جملة اسمية", "جملة فعلية", "جملة إنشائية", "جملة طلبية"],
+                    correct: 0
+                },
+                {
+                    question: "ما إعراب كلمة 'مُجْتَهِدًا' في 'الطالبُ مُجْتَهِدًا'؟",
+                    options: ["حال منصوب", "مفعول به", "خبر مرفوع", "نعت منصوب"],
+                    correct: 0
+                },
+                {
+                    question: "ما مرادف كلمة 'الحَزِين'؟",
+                    options: ["الْكَئِيب", "الفَرِح", "الْمَرِح", "السَّعِيد"],
+                    correct: 0
+                }
+            ],
+            2: [
+                {
+                    question: "ما نوع 'إنَّ' في قوله تعالى: 'إِنَّ اللَّهَ غَفُورٌ رَحِيمٌ'؟",
+                    options: ["حرف ناسخ", "اسم من أسماء الله", "فعل ماض", "حرف جواب"],
+                    correct: 0
+                },
+                {
+                    question: "ما إعراب 'اللَّهَ' في الآية السابقة؟",
+                    options: ["اسم إن منصوب", "خبر إن مرفوع", "مبتدأ مرفوع", "فاعل مرفوع"],
+                    correct: 0
+                },
+                {
+                    question: "ما نوع التشبيه في قولنا: 'الأسدُ كالليلِ في هيبته'؟",
+                    options: ["تشبيه تمثيلي", "تشبيه مفرد", "تشبيه ضمني", "تشبيه بليغ"],
+                    correct: 0
+                },
+                {
+                    question: "ما وزن الفعل 'يَسْتَخْرِجُ'؟",
+                    options: ["يَفْتَعِلُ", "يَسْتَفْعِلُ", "يَتَفَعَّلُ", "يَفْعَلُ"],
+                    correct: 1
+                },
+                {
+                    question: "ما جمع كلمة 'عَالِم'؟",
+                    options: ["عُلَمَاء", "عَالِمُونَ", "عَالِمِين", "عَلَمَاء"],
+                    correct: 0
+                },
+                {
+                    question: "ما نوع الجمع في كلمة 'فُعُل'؟",
+                    options: ["جمع تكسير", "جمع مذكر سالم", "جمع مؤنث سالم", "جمع قلة"],
+                    correct: 3
+                },
+                {
+                    question: "ما إعراب 'مُجْتَهِدِينَ' في 'جاء الطلابُ مُجْتَهِدِينَ'؟",
+                    options: ["حال منصوب", "مفعول به", "خبر", "مبتدأ"],
+                    correct: 0
+                },
+                {
+                    question: "ما نوع الاستفهام في 'أَتَذْهَبُ إِلَى الْمَدْرَسَةِ؟'؟",
+                    options: ["استفهام حرفي", "استفهام بأداة", "استفهام بغير أداة", "استفهام تقريري"],
+                    correct: 1
+                },
+                {
+                    question: "ما نوع الفعل 'كَتَبَ' من حيث الزمن؟",
+                    options: ["فعل ماض", "فعل مضارع", "فعل أمر", "فعل ناسخ"],
+                    correct: 0
+                },
+                {
+                    question: "ما مرادف كلمة 'الْبَصِير'؟",
+                    options: ["النَّاظِر", "الْأَعْمَى", "الْعَالِم", "الْجَاهِل"],
+                    correct: 0
+                }
+            ]
+        };
+
+        // حالة التطبيق
+        const appState = {
+            currentLevel: 1,
+            currentQuestion: 0,
+            score: 0,
+            userAnswers: [],
+            totalLevels: Object.keys(questionsData).length,
+            quizStarted: false
+        };
+
+        // عناصر DOM
+        const startScreen = document.getElementById('startScreen');
+        const quizContainer = document.getElementById('quizContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const questionNum = document.getElementById('questionNum');
+        const questionLevel = document.getElementById('questionLevel');
+        const currentLevelEl = document.getElementById('currentLevel');
+        const remainingQuestionsEl = document.getElementById('remainingQuestions');
+        const scoreEl = document.getElementById('score');
+        const levelProgress = document.getElementById('levelProgress');
+        const levelNumber = document.getElementById('levelNumber');
+        const resultScore = document.getElementById('resultScore');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultMessage = document.getElementById('resultMessage');
+        const levelUpMessage = document.getElementById('levelUpMessage');
+
+        // تهيئة التطبيق
+        function initApp() {
+            updateDashboard();
+            startBtn.addEventListener('click', startQuiz);
+            nextBtn.addEventListener('click', nextQuestion);
+            prevBtn.addEventListener('click', prevQuestion);
+            continueBtn.addEventListener('click', nextLevel);
+            restartBtn.addEventListener('click', restartQuiz);
+        }
+
+        // تحديث لوحة المعلومات
+        function updateDashboard() {
+            currentLevelEl.textContent = appState.currentLevel;
+            const remaining = 10 - appState.currentQuestion;
+            remainingQuestionsEl.textContent = remaining > 0 ? remaining : 0;
+            scoreEl.textContent = appState.score;
+            
+            // تحديث شريط التقدم
+            const progressPercent = (appState.currentQuestion / 10) * 100;
+            levelProgress.style.width = `${progressPercent}%`;
+            levelNumber.textContent = appState.currentLevel;
+        }
+
+        // بدء الاختبار
+        function startQuiz() {
+            appState.quizStarted = true;
+            appState.currentQuestion = 0;
+            appState.userAnswers = [];
+            
+            startScreen.style.display = 'none';
+            quizContainer.classList.add('active');
+            resultContainer.classList.remove('active');
+            
+            loadQuestion();
+            updateDashboard();
+        }
+
+        // تحميل السؤال الحالي
+        function loadQuestion() {
+            const questions = questionsData[appState.currentLevel];
+            const currentQ = questions[appState.currentQuestion];
+            
+            questionText.textContent = currentQ.question;
+            questionNum.textContent = appState.currentQuestion + 1;
+            questionLevel.textContent = appState.currentLevel;
+            
+            // إزالة الخيارات السابقة
+            optionsContainer.innerHTML = '';
+            
+            // إضافة الخيارات الجديدة
+            const optionLetters = ['أ', 'ب', 'ج', 'د'];
+            currentQ.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (appState.userAnswers[appState.currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.innerHTML = `
+                    <div class="option-label">${optionLetters[index]}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // تحديث حالة الأزرار
+            prevBtn.disabled = appState.currentQuestion === 0;
+            
+            if (appState.currentQuestion === 9) {
+                nextBtn.innerHTML = 'إنهاء المستوى <i class="fas fa-flag-checkered"></i>';
+            } else {
+                nextBtn.innerHTML = 'التالي <i class="fas fa-arrow-left"></i>';
+            }
+            
+            updateDashboard();
+        }
+
+        // اختيار إجابة
+        function selectOption(optionIndex) {
+            // إزالة التحديد من جميع الخيارات
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // تحديد الخيار المختار
+            document.querySelectorAll('.option')[optionIndex].classList.add('selected');
+            
+            // حفظ الإجابة
+            appState.userAnswers[appState.currentQuestion] = optionIndex;
+            
+            // تحقق من الإجابة الصحيحة
+            const questions = questionsData[appState.currentLevel];
+            const currentQ = questions[appState.currentQuestion];
+            
+            if (optionIndex === currentQ.correct && !appState.userAnswers[appState.currentQuestion + 10]) {
+                appState.score += 10; // 10 نقاط لكل إجابة صحيحة
+                scoreEl.textContent = appState.score;
+            }
+        }
+
+        // السؤال التالي
+        function nextQuestion() {
+            // التحقق من اختيار إجابة
+            if (appState.userAnswers[appState.currentQuestion] === undefined) {
+                alert('يرجى اختيار إجابة قبل المتابعة');
+                return;
+            }
+            
+            // إذا كان هذا آخر سؤال في المستوى
+            if (appState.currentQuestion === 9) {
+                finishLevel();
+                return;
+            }
+            
+            appState.currentQuestion++;
+            loadQuestion();
+        }
+
+        // السؤال السابق
+        function prevQuestion() {
+            if (appState.currentQuestion > 0) {
+                appState.currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        // إنهاء المستوى
+        function finishLevel() {
+            const questions = questionsData[appState.currentLevel];
+            let correctAnswers = 0;
+            
+            // حساب الإجابات الصحيحة
+            for (let i = 0; i < questions.length; i++) {
+                if (appState.userAnswers[i] === questions[i].correct) {
+                    correctAnswers++;
+                }
+            }
+            
+            // إظهار النتيجة
+            quizContainer.classList.remove('active');
+            resultContainer.classList.add('active');
+            
+            resultScore.textContent = `${correctAnswers * 10}/100`;
+            resultTitle.textContent = correctAnswers >= 7 ? "أحسنت! لقد اجتزت المستوى بنجاح" : "حاول مرة أخرى لتحسين نتيجتك";
+            
+            if (correctAnswers >= 7) {
+                resultMessage.textContent = `أجبت على ${correctAnswers} من 10 أسئلة بشكل صحيح. يمكنك الانتقال للمستوى التالي.`;
+                
+                if (appState.currentLevel < appState.totalLevels) {
+                    continueBtn.style.display = 'inline-flex';
+                    levelUpMessage.style.display = 'block';
+                } else {
+                    continueBtn.style.display = 'none';
+                    resultMessage.textContent += " لقد أكملت جميع المستويات! تهانينا!";
+                }
+            } else {
+                resultMessage.textContent = `أجبت على ${correctAnswers} من 10 أسئلة بشكل صحيح. تحتاج إلى 7 إجابات صحيحة على الأقل للانتقال للمستوى التالي.`;
+                continueBtn.style.display = 'none';
+                levelUpMessage.style.display = 'none';
+            }
+            
+            // عرض الإجابات الصحيحة والخاطئة
+            setTimeout(() => {
+                showAnswersFeedback(questions);
+            }, 500);
+        }
+
+        // عرض تغذية راجعة للإجابات
+        function showAnswersFeedback(questions) {
+            // نضيف فئات للإجابات الصحيحة والخاطئة
+            for (let i = 0; i < questions.length; i++) {
+                const userAnswer = appState.userAnswers[i];
+                const correctAnswer = questions[i].correct;
+                
+                if (userAnswer !== undefined) {
+                    // في الاختبار الحقيقي، قد نريد عرض كل الإجابات مع التغذية الراجعة
+                }
+            }
+        }
+
+        // الانتقال للمستوى التالي
+        function nextLevel() {
+            if (appState.currentLevel < appState.totalLevels) {
+                appState.currentLevel++;
+                appState.currentQuestion = 0;
+                appState.userAnswers = [];
+                
+                resultContainer.classList.remove('active');
+                quizContainer.classList.add('active');
+                
+                loadQuestion();
+                updateDashboard();
+                
+                continueBtn.style.display = 'none';
+                levelUpMessage.style.display = 'none';
+            }
+        }
+
+        // إعادة الاختبار
+        function restartQuiz() {
+            appState.currentLevel = 1;
+            appState.currentQuestion = 0;
+            appState.score = 0;
+            appState.userAnswers = [];
+            
+            resultContainer.classList.remove('active');
+            quizContainer.classList.add('active');
+            
+            loadQuestion();
+            updateDashboard();
+        }
+
+        // بدء التطبيق عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
