@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الاختبارات الذكي - مدرسة المروة الخاصة</title>
+    <title>منصة المروة التعليمية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,20 +15,25 @@
 
         :root {
             --primary-color: #1e4b8c;
+            --primary-dark: #0f2b4f;
             --secondary-color: #3a7bd5;
             --accent-color: #f9b42a;
-            --accent-light: #ffd966;
+            --accent-dark: #e09d1f;
             --light-color: #f8fafc;
             --dark-color: #0a2a44;
             --success-color: #27ae60;
             --error-color: #e74c3c;
             --warning-color: #f39c12;
             --info-color: #3498db;
+            --gray-light: #e9ecef;
+            --gray-medium: #ced4da;
             --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             --gradient-accent: linear-gradient(135deg, var(--accent-color), #f1c40f);
+            --gradient-success: linear-gradient(135deg, #27ae60, #2ecc71);
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.07);
             --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
             --border-radius-sm: 12px;
             --border-radius-md: 18px;
             --border-radius-lg: 25px;
@@ -36,7 +41,7 @@
         }
 
         body {
-            background: linear-gradient(145deg, #eef2f7 0%, #d9e2ef 100%);
+            background: linear-gradient(145deg, #f0f4fa 0%, #dae3f0 100%);
             color: #2c3e50;
             min-height: 100vh;
             padding: 25px;
@@ -50,13 +55,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.03"><text x="10" y="20" font-family="Arial" font-size="14">المروة</text><text x="60" y="60" font-family="Arial" font-size="18">Al-Marwah</text></svg>') repeat;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.02"><text x="10" y="20" font-family="Arial" font-size="14">المروة</text><text x="60" y="60" font-family="Arial" font-size="18">Al-Marwah</text></svg>') repeat;
             pointer-events: none;
             z-index: 0;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
@@ -68,7 +73,7 @@
             background: var(--gradient-primary);
             color: white;
             border-radius: var(--border-radius-lg);
-            padding: 30px 30px;
+            padding: 25px 35px;
             margin-bottom: 40px;
             box-shadow: var(--shadow-lg);
             position: relative;
@@ -82,33 +87,10 @@
             backdrop-filter: blur(5px);
         }
 
-        .header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: rotate(25deg);
-        }
-
-        .header::after {
-            content: "";
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 250px;
-            height: 250px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 50%;
-        }
-
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
             z-index: 2;
         }
 
@@ -125,10 +107,20 @@
             box-shadow: var(--shadow-md);
             border: 3px solid var(--accent-color);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .school-logo img{
-            width: 130px;
-            height: 150px;
+
+        .school-logo::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            opacity: 0.3;
+            border-radius: 50%;
         }
 
         .school-logo:hover {
@@ -150,109 +142,375 @@
             align-items: center;
             gap: 8px;
             background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
+            padding: 8px 20px;
             border-radius: 50px;
             backdrop-filter: blur(4px);
         }
 
-        .teacher-badge {
+        .header-badge {
             background: var(--accent-color);
             color: var(--dark-color);
-            padding: 5px 15px;
-            border-radius: 30px;
+            padding: 10px 25px;
+            border-radius: 50px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* محدد الصف الدراسي */
-        .grade-selector-wrapper {
+        /* مسار التنقل (Breadcrumb) */
+        .breadcrumb {
             background: white;
-            border-radius: var(--border-radius-md);
-            padding: 25px 30px;
+            border-radius: 60px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        .breadcrumb-item:hover {
+            background: var(--light-color);
+        }
+
+        .breadcrumb-item.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .breadcrumb-item i {
+            font-size: 1.1rem;
+        }
+
+        .breadcrumb-separator {
+            color: var(--gray-medium);
+            font-size: 1.2rem;
+        }
+
+        /* محدد الصفوف المتطور */
+        .selector-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 35px;
             margin-bottom: 30px;
             box-shadow: var(--shadow-md);
             border-right: 8px solid var(--accent-color);
             transition: var(--transition);
         }
 
-        .grade-selector-wrapper:hover {
-            transform: translateX(-5px);
+        .selector-section:hover {
             box-shadow: var(--shadow-lg);
         }
 
-        .selector-label {
+        .section-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            color: var(--dark-color);
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .selector-label i {
-            font-size: 2rem;
+        .section-title i {
+            font-size: 2.2rem;
             color: var(--accent-color);
             background: #fff3e0;
-            padding: 12px;
-            border-radius: 50%;
+            padding: 15px;
+            border-radius: 20px;
         }
 
-        .selector-label h3 {
-            font-size: 1.6rem;
+        .section-title h2 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
             font-weight: 600;
         }
 
-        .grade-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
+        .section-title span {
+            color: var(--primary-color);
+            font-size: 1rem;
+            background: var(--light-color);
+            padding: 5px 15px;
+            border-radius: 30px;
         }
 
-        .grade-card {
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .selector-card {
             background: var(--light-color);
             border: 2px solid transparent;
-            border-radius: var(--border-radius-sm);
-            padding: 20px 15px;
+            border-radius: var(--border-radius-md);
+            padding: 25px 15px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
 
-        .grade-card:hover {
+        .selector-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .selector-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .selector-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .selector-card.active {
+            border-color: var(--primary-color);
+            background: linear-gradient(145deg, #ffffff, #eef5ff);
+            box-shadow: 0 0 0 3px rgba(30, 75, 140, 0.2);
+        }
+
+        .selector-card.active::before {
+            transform: translateX(0);
+            background: var(--gradient-accent);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .selector-card.active .card-icon {
+            color: var(--accent-color);
+        }
+
+        .selector-card h3 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .selector-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent-color);
+            color: var(--dark-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* قسم الدروس المتقدم */
+        .lessons-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+
+        .lessons-section.active {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        .lessons-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .subject-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .subject-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .subject-details h3 {
+            font-size: 2rem;
+            color: var(--dark-color);
+        }
+
+        .subject-details p {
+            color: #666;
+        }
+
+        .lessons-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-tag {
+            background: var(--light-color);
+            padding: 10px 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark-color);
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .lesson-card {
+            background: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            border-radius: 50%;
+            transform: translate(30px, 30px);
+        }
+
+        .lesson-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-5px);
             background: white;
             box-shadow: var(--shadow-md);
         }
 
-        .grade-card.active {
+        .lesson-card.active {
             border-color: var(--primary-color);
-            background: linear-gradient(145deg, #ffffff, #eef5ff);
-            box-shadow: 0 0 0 3px rgba(30, 75, 140, 0.2);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 75, 140, 0.15);
         }
 
-        .grade-card .grade-icon {
-            font-size: 2.2rem;
+        .lesson-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
             color: var(--primary-color);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .lesson-card h4 {
+            font-size: 1.4rem;
+            color: var(--dark-color);
             margin-bottom: 10px;
         }
 
-        .grade-card.active .grade-icon {
-            color: var(--accent-color);
-        }
-
-        .grade-card h4 {
-            font-size: 1.3rem;
-            color: var(--dark-color);
-            margin-bottom: 5px;
-        }
-
-        .grade-card p {
+        .lesson-meta {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
             color: #666;
             font-size: 0.9rem;
         }
 
-        /* لوحة الإحصائيات */
+        .lesson-meta i {
+            color: var(--accent-color);
+        }
+
+        .lesson-progress {
+            height: 6px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .lesson-progress-bar {
+            height: 100%;
+            background: var(--gradient-success);
+            width: 0%;
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .difficulty-easy {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* باقي العناصر (مع تحديثات) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -304,7 +562,6 @@
             line-height: 1.2;
         }
 
-        /* مؤشر المستوى المتقدم */
         .level-indicator-modern {
             background: white;
             border-radius: var(--border-radius-md);
@@ -329,16 +586,6 @@
             justify-content: center;
             font-weight: 700;
             box-shadow: 0 5px 0 #b16f0e;
-        }
-
-        .level-badge-modern span:first-child {
-            font-size: 2rem;
-            line-height: 1;
-        }
-
-        .level-badge-modern span:last-child {
-            font-size: 0.8rem;
-            text-transform: uppercase;
         }
 
         .progress-area {
@@ -372,11 +619,17 @@
             box-shadow: 0 0 10px var(--secondary-color);
         }
 
-        .level-stats {
-            display: flex;
-            gap: 20px;
-            color: #555;
-            font-size: 0.95rem;
+        .lesson-info {
+            background: var(--light-color);
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .lesson-info i {
+            margin-left: 8px;
+            color: var(--accent-color);
         }
 
         /* حاوية الاختبار */
@@ -411,10 +664,15 @@
             gap: 15px;
         }
 
-        .badge-level {
+        .quiz-badges {
+            display: flex;
+            gap: 15px;
+        }
+
+        .badge-primary {
             background: var(--gradient-primary);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 25px;
             border-radius: 40px;
             font-size: 1rem;
             font-weight: 600;
@@ -423,10 +681,16 @@
             gap: 8px;
         }
 
-        .question-num {
-            font-size: 1.2rem;
+        .badge-lesson {
+            background: var(--light-color);
             color: var(--dark-color);
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-size: 1rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .question-text-modern {
@@ -469,28 +733,6 @@
             overflow: hidden;
         }
 
-        .option-card:hover {
-            border-color: var(--secondary-color);
-            background: #eef5ff;
-            transform: scale(1.02);
-        }
-
-        .option-card.selected {
-            border-color: var(--primary-color);
-            background: #e3efff;
-            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.3);
-        }
-
-        .option-card.correct {
-            background: #d4edda;
-            border-color: var(--success-color);
-        }
-
-        .option-card.incorrect {
-            background: #f8d7da;
-            border-color: var(--error-color);
-        }
-
         .option-marker {
             width: 45px;
             height: 45px;
@@ -506,63 +748,22 @@
             transition: var(--transition);
         }
 
+        .option-card:hover {
+            border-color: var(--secondary-color);
+            background: #eef5ff;
+            transform: scale(1.02);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background: #e3efff;
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.3);
+        }
+
         .selected .option-marker {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
-        }
-
-        .option-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .quiz-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn-modern {
-            padding: 15px 35px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: #f1f3f5;
-            color: var(--dark-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-modern.primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 5px 0 #0f2b4f;
-        }
-
-        .btn-modern.primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 0 #0f2b4f;
-        }
-
-        .btn-modern.secondary:hover {
-            background: #e2e6ea;
-            transform: translateY(-2px);
-        }
-
-        .btn-modern:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         /* شاشة النتائج */
@@ -608,158 +809,221 @@
             margin: 20px 0;
         }
 
-        .result-message-modern {
-            font-size: 1.3rem;
-            color: #4a5568;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 100px;
-            display: inline-block;
-        }
-
-        .level-up-modern {
-            background: var(--gradient-accent);
-            color: var(--dark-color);
+        .result-details {
+            background: var(--light-color);
             padding: 20px;
             border-radius: 60px;
-            margin: 25px 0;
-            font-size: 1.6rem;
-            font-weight: 700;
-            animation: pulse 2s infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 15px 30px rgba(249, 180, 42, 0.4); }
-            100% { transform: scale(1); }
-        }
-
-        .start-screen-modern {
-            text-align: center;
-            padding: 50px 30px;
-            background: white;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .start-screen-modern h2 {
-            color: var(--primary-color);
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-        }
-
-        .start-screen-modern p {
-            font-size: 1.2rem;
-            color: #4a5568;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            line-height: 1.8;
-        }
-
-        .features {
+            margin: 30px 0;
             display: flex;
             justify-content: center;
             gap: 40px;
-            margin: 40px 0;
             flex-wrap: wrap;
         }
 
-        .feature {
+        .detail-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 10px;
         }
 
-        .feature i {
-            font-size: 2.5rem;
-            color: var(--accent-color);
-            background: #fff3e0;
-            padding: 20px;
-            border-radius: 30px;
-        }
-
-        .btn-start-modern {
-            padding: 18px 60px;
-            font-size: 1.4rem;
-            background: var(--gradient-primary);
-            color: white;
+        .btn-modern {
+            padding: 15px 35px;
             border: none;
-            border-radius: 60px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 15px;
-            box-shadow: 0 8px 0 #0f2b4f;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 12px;
+            background: #f1f3f5;
+            color: var(--dark-color);
+            box-shadow: var(--shadow-sm);
         }
 
-        .btn-start-modern:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 13px 0 #0f2b4f;
+        .btn-modern.primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 5px 0 var(--primary-dark);
+        }
+
+        .btn-modern.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 var(--primary-dark);
+        }
+
+        .btn-modern.success {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 5px 0 #1e8449;
+        }
+
+        .btn-modern:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding: 8px 20px;
+            background: white;
+            border-radius: 40px;
+            width: fit-content;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background: var(--light-color);
+            transform: translateX(-5px);
         }
     </style>
-    <!-- إضافة خط Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- الهيدر المتطور -->
+        <!-- الهيدر -->
         <header class="header">
             <div class="logo-area">
                 <div class="school-logo">
-                   <img src="logo.png">
+                    <i class="fas fa-gem"></i>
                 </div>
                 <div class="title-area">
-                    <h1>نظام الاختبارات الذكي</h1>
-                    <p><i class="fas fa-chalkboard-teacher"></i> إعداد / أ. محمود محمد عطية <span class="teacher-badge">خبير اللغة العربية</span></p>
+                    <h1>منصة المروة التعليمية</h1>
+                    <p><i class="fas fa-chalkboard-teacher"></i> إعداد / أ. محمود محمد عطية</p>
                 </div>
             </div>
-            <div class="header-date">
-                <i class="fas fa-calendar-alt"></i> الفصل الدراسي الثاني 2026
+            <div class="header-badge">
+                <i class="fas fa-calendar-alt"></i> الفصل الدراسي الأول 2025
             </div>
         </header>
 
-        <!-- اختيار الصف الدراسي -->
-        <div class="grade-selector-wrapper" id="gradeSelector">
-            <div class="selector-label">
+        <!-- مسار التنقل -->
+        <div class="breadcrumb" id="breadcrumb">
+            <div class="breadcrumb-item active" data-step="grade">
                 <i class="fas fa-graduation-cap"></i>
-                <h3>اختر صفك الدراسي</h3>
+                <span>اختيار الصف</span>
             </div>
-            <div class="grade-cards" id="gradeCards">
-                <div class="grade-card" data-grade="1">
-                    <div class="grade-icon"><i class="fas fa-child"></i></div>
-                    <h4>الصف الأول</h4>
-                    <p>المرحلة الابتدائية</p>
+            <i class="fas fa-chevron-left breadcrumb-separator"></i>
+            <div class="breadcrumb-item" data-step="subject">
+                <i class="fas fa-book"></i>
+                <span>اختيار المادة</span>
+            </div>
+            <i class="fas fa-chevron-left breadcrumb-separator"></i>
+            <div class="breadcrumb-item" data-step="lesson">
+                <i class="fas fa-list-ul"></i>
+                <span>اختيار الدرس</span>
+            </div>
+            <i class="fas fa-chevron-left breadcrumb-separator"></i>
+            <div class="breadcrumb-item" data-step="quiz">
+                <i class="fas fa-question-circle"></i>
+                <span>الاختبار</span>
+            </div>
+        </div>
+
+        <!-- قسم اختيار الصف -->
+        <div class="selector-section" id="gradeSection">
+            <div class="section-title">
+                <i class="fas fa-graduation-cap"></i>
+                <h2>اختر صفك الدراسي</h2>
+                <span>المرحلة الابتدائية</span>
+            </div>
+            <div class="grid-cards" id="gradeCards">
+                <div class="selector-card" data-grade="1">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3>الصف الأول</h3>
+                    <p>الابتدائي</p>
                 </div>
-                <div class="grade-card" data-grade="2">
-                    <div class="grade-icon"><i class="fas fa-user-graduate"></i></div>
-                    <h4>الصف الثاني</h4>
-                    <p>المرحلة الابتدائية</p>
+                <div class="selector-card" data-grade="2">
+                    <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3>الصف الثاني</h3>
+                    <p>الابتدائي</p>
                 </div>
-                <div class="grade-card" data-grade="3">
-                    <div class="grade-icon"><i class="fas fa-star"></i></div>
-                    <h4>الصف الثالث</h4>
-                    <p>المرحلة الابتدائية</p>
+                <div class="selector-card" data-grade="3">
+                    <div class="card-icon"><i class="fas fa-star"></i></div>
+                    <h3>الصف الثالث</h3>
+                    <p>الابتدائي</p>
                 </div>
-                <div class="grade-card" data-grade="4">
-                    <div class="grade-icon"><i class="fas fa-certificate"></i></div>
-                    <h4>الصف الرابع</h4>
-                    <p>المرحلة الابتدائية</p>
+                <div class="selector-card" data-grade="4">
+                    <div class="card-icon"><i class="fas fa-certificate"></i></div>
+                    <h3>الصف الرابع</h3>
+                    <p>الابتدائي</p>
+                </div>
+                <div class="selector-card" data-grade="5">
+                    <div class="card-icon"><i class="fas fa-award"></i></div>
+                    <h3>الصف الخامس</h3>
+                    <p>الابتدائي</p>
+                    <span class="card-badge">قريباً</span>
                 </div>
             </div>
         </div>
 
+        <!-- قسم اختيار المواد (يظهر بعد اختيار الصف) -->
+        <div class="selector-section" id="subjectSection" style="display: none;">
+            <div class="section-title">
+                <i class="fas fa-book-open"></i>
+                <h2>اختر المادة الدراسية</h2>
+                <span id="selectedGradeDisplay"></span>
+            </div>
+            <div class="grid-cards" id="subjectCards">
+                <!-- تضاف ديناميكياً -->
+            </div>
+            <div class="back-button" id="backToGrades">
+                <i class="fas fa-arrow-right"></i> العودة للصفوف
+            </div>
+        </div>
+
+        <!-- قسم اختيار الدروس -->
+        <div class="lessons-section" id="lessonsSection">
+            <div class="lessons-header">
+                <div class="subject-info">
+                    <div class="subject-icon" id="subjectIcon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="subject-details">
+                        <h3 id="subjectName">اللغة العربية</h3>
+                        <p id="gradeName">الصف الأول الابتدائي</p>
+                    </div>
+                </div>
+                <div class="lessons-stats">
+                    <div class="stat-tag">
+                        <i class="fas fa-book"></i>
+                        <span id="lessonsCount">12 درس</span>
+                    </div>
+                    <div class="stat-tag">
+                        <i class="fas fa-question-circle"></i>
+                        <span id="totalQuestions">120 سؤال</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 20px; color: var(--dark-color);">
+                <i class="fas fa-list-ul" style="color: var(--accent-color); margin-left: 10px;"></i>
+                اختر الدرس الذي تريد الاختبار فيه
+            </h3>
+
+            <div class="lessons-grid" id="lessonsGrid">
+                <!-- تضاف الدروس ديناميكياً -->
+            </div>
+
+            <div class="back-button" id="backToSubjects">
+                <i class="fas fa-arrow-right"></i> العودة للمواد
+            </div>
+        </div>
+
         <!-- لوحة الإحصائيات -->
-        <div class="stats-grid">
+        <div class="stats-grid" id="statsSection" style="display: none;">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
                 <div class="stat-content">
@@ -783,67 +1047,50 @@
             </div>
         </div>
 
-        <!-- مؤشر المستوى المتطور -->
-        <div class="level-indicator-modern">
+        <!-- مؤشر المستوى -->
+        <div class="level-indicator-modern" id="levelIndicator" style="display: none;">
             <div class="level-badge-modern">
                 <span id="levelNumber">1</span>
                 <span>مستوى</span>
             </div>
             <div class="progress-area">
                 <div class="progress-header">
-                    <span>تقدم المستوى</span>
+                    <span>تقدم الاختبار</span>
                     <span id="progressPercent">0%</span>
                 </div>
                 <div class="progress-bar-modern">
                     <div class="progress-fill" id="levelProgress" style="width: 0%;"></div>
                 </div>
-                <div class="level-stats">
-                    <span><i class="fas fa-check-circle" style="color: var(--success-color);"></i> مطلوب 7 صح</span>
-                    <span><i class="fas fa-star" style="color: var(--accent-color);"></i> 10 نقاط لكل سؤال</span>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <span class="lesson-info" id="currentLessonInfo">
+                        <i class="fas fa-book-open"></i> <span id="currentLessonName">الدرس الأول</span>
+                    </span>
+                    <span class="lesson-info">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i> مطلوب 7 صح
+                    </span>
                 </div>
             </div>
-        </div>
-
-        <!-- شاشة البدء -->
-        <div class="start-screen-modern" id="startScreen">
-            <h2>مرحبًا بك في اختبار اللغة العربية</h2>
-            <p>اختبر مهاراتك في قواعد اللغة العربية والأدب والبلاغة من خلال أسئلة تفاعلية متعددة المستويات. كل مستوى يحتوي على 10 أسئلة، ويجب تحقيق 7 إجابات صحيحة على الأقل للانتقال للمستوى التالي.</p>
-            
-            <div class="features">
-                <div class="feature">
-                    <i class="fas fa-question-circle"></i>
-                    <span>أسئلة متنوعة</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-chart-line"></i>
-                    <span>مستويات متدرجة</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-award"></i>
-                    <span>نقاط وجوائز</span>
-                </div>
-            </div>
-
-            <button class="btn-start-modern" id="startBtn" disabled>
-                <i class="fas fa-play-circle"></i> بدء الاختبار
-            </button>
-            <p style="margin-top: 15px; color: #888;" id="gradeWarning">* الرجاء اختيار الصف أولاً</p>
         </div>
 
         <!-- حاوية الاختبار -->
         <div class="quiz-container-modern" id="quizContainer">
             <div class="quiz-header-modern">
-                <div class="badge-level"><i class="fas fa-gem"></i> المستوى <span id="questionLevel">1</span></div>
+                <div class="quiz-badges">
+                    <div class="badge-primary">
+                        <i class="fas fa-gem"></i> المستوى <span id="questionLevel">1</span>
+                    </div>
+                    <div class="badge-lesson" id="quizLessonName">
+                        <i class="fas fa-book"></i> <span>الدرس الأول: المدخل إلى النحو</span>
+                    </div>
+                </div>
                 <div class="question-num">السؤال <span id="questionNum">1</span> من 10</div>
             </div>
             
             <div class="question-text-modern" id="questionText"></div>
             
-            <div class="options-grid-modern" id="optionsContainer">
-                <!-- يتم إضافة الخيارات ديناميكياً -->
-            </div>
+            <div class="options-grid-modern" id="optionsContainer"></div>
             
-            <div class="quiz-actions">
+            <div class="quiz-actions" style="display: flex; justify-content: space-between;">
                 <button class="btn-modern secondary" id="prevBtn" disabled>
                     <i class="fas fa-arrow-right"></i> السابق
                 </button>
@@ -858,16 +1105,38 @@
             <div class="result-icon-modern">
                 <i class="fas fa-crown"></i>
             </div>
-            <h2 class="result-title-modern" id="resultTitle">أحسنت! لقد أكملت المستوى</h2>
+            <h2 class="result-title-modern" id="resultTitle">أحسنت! لقد أكملت الاختبار</h2>
             <div class="result-score-modern" id="resultScore">0/100</div>
-            <div class="result-message-modern" id="resultMessage"></div>
-            <div id="levelUpMessage" class="level-up-modern" style="display: none;">
-                <i class="fas fa-arrow-up"></i> مستوى جديد! تهانينا
-                <i class="fas fa-arrow-up"></i>
+            
+            <div class="result-details">
+                <div class="detail-item">
+                    <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                    <span id="correctAnswers">0</span> إجابات صحيحة
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-times-circle" style="color: var(--error-color);"></i>
+                    <span id="wrongAnswers">0</span> إجابات خاطئة
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-star" style="color: var(--accent-color);"></i>
+                    <span id="totalPoints">0</span> نقطة
+                </div>
             </div>
+
+            <div class="result-message-modern" id="resultMessage"></div>
+            
+            <div id="levelUpMessage" style="display: none; margin: 20px 0;">
+                <div class="badge-primary" style="font-size: 1.5rem; padding: 15px 30px;">
+                    <i class="fas fa-arrow-up"></i> مستوى جديد! تهانينا <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                <button class="btn-modern primary" id="continueBtn" style="display: none;">
-                    الاستمرار للمستوى التالي <i class="fas fa-arrow-left"></i>
+                <button class="btn-modern success" id="continueBtn" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> الدرس التالي
+                </button>
+                <button class="btn-modern primary" id="moreLessonsBtn">
+                    <i class="fas fa-list-ul"></i> اختيار درس آخر
                 </button>
                 <button class="btn-modern secondary" id="restartBtn">
                     <i class="fas fa-redo-alt"></i> إعادة الاختبار
@@ -877,85 +1146,144 @@
     </div>
 
     <script>
-        // بيانات الأسئلة متعددة المستويات لكل صف
-        const questionsDatabase = {
+        // قاعدة البيانات المتكاملة (مواد - دروس - أسئلة)
+        const schoolDatabase = {
             grade1: {
-                1: [
-                    { question: "ما نوع الجمع في كلمة 'مُعَلِّمُونَ'؟", options: ["جمع مؤنث سالم", "جمع مذكر سالم", "جمع تكسير", "مفرد"], correct: 1 },
-                    { question: "ما إعراب كلمة 'الطالبُ' في جملة 'الطالبُ مجتهدٌ'؟", options: ["مبتدأ مرفوع", "خبر مرفوع", "فاعل مرفوع", "مفعول به منصوب"], correct: 0 },
-                    { question: "ما معنى كلمة 'الفداء'؟", options: ["الكذب", "الظلم", "التضحية", "النصر"], correct: 2 },
-                    { question: "ما الحرف المنطوق غير المكتوب في 'هذا'؟", options: [" النون", "اللام ", " الألف", "ليس هناك"], correct: 2 },
-                    { question: "ما الحرف المنطوق غير المكتوب في 'رجلٌ'؟", options: [" النون", "اللام ", " الألف", "ليس هناك"], correct: 0 },
-                    { question: "ما جمع كلمة 'كِتَاب'؟", options: ["كُتُب", "كِتَابَات", "كُتَّاب", "كِتَابُونَ"], correct: 0 },
-                    { question: "ما الفعل الأمر من الفعل 'يَكْتُبُ'؟", options: ["اُكْتُبْ", "كُتِبَ", "اِكْتَبْ", "كَتَّبَ"], correct: 0 },
-                    { question: "ما نوع الجملة 'الجَوُّ مُشْمِسٌ'؟", options: ["جملة اسمية", "جملة فعلية", "جملة إنشائية", "جملة طلبية"], correct: 0 },
-                    { question: "ما إعراب كلمة 'مُجتَهدٌ' في 'الطالبُ مُجتهِدٌ'؟", options: ["حال منصوب", "مفعول به", "خبر مرفوع", "نعت منصوب"], correct: 2 },
-                    { question: "ما مرادف كلمة 'الحَزِين'؟", options: ["الْكَئِيب", "الفَرِح", "الْمَرِح", "السَّعِيد"], correct: 0 }
-                ],
-                2: [
-                    { question: "ما علامة الاسم في 'المدرسة'؟", options: [" ال", " الجر", " التنوين", " ال + التاء المربوطة"], correct: 3 },
-                    { question: "ما نوع الكلمة 'يقرأ' ؟", options: ["اسم  ", "  فعل", " حرف", " غير ذلك"], correct: 1 },
-                    { question: "ليس من عناصر الرسالة؟", options: [" المرسل إليه", " المرسل", " التوقيع", " العنوان"], correct: 3 },
-                    { question: "مضاد كلمة 'يحب'؟", options: ["يغضب", "يسأل", "يشتاق", "يكره"], correct: 3 },
-                    { question: "ما جمع كلمة 'عَالِم'؟", options: ["عُلَمَاء", "عُلُوم", "أَعلَام", "عَلَمَاء"], correct: 0 },
-                    { question: "ما نوع الجمع في كلمة 'فُعُل'؟", options: ["جمع تكسير", "جمع مذكر سالم", "جمع مؤنث سالم", "جمع قلة"], correct: 3 },
-                    { question: "ما إعراب 'مُجْتَهِدِينَ' في 'جاء الطلابُ مُجْتَهِدِينَ'؟", options: ["حال منصوب", "مفعول به", "خبر", "مبتدأ"], correct: 0 },
-                    { question: "ما نوع الاستفهام في 'أَتَذْهَبُ إِلَى الْمَدْرَسَةِ؟'؟", options: ["استفهام حرفي", "استفهام بأداة", "استفهام بغير أداة", "استفهام تقريري"], correct: 1 },
-                    { question: "ما نوع الفعل 'كَتَبَ' من حيث الزمن؟", options: ["فعل ماض", "فعل مضارع", "فعل أمر", "فعل ناسخ"], correct: 0 },
-                    { question: "ما مرادف كلمة 'الْبَصِير'؟", options: ["النَّاظِر", "الْأَعْمَى", "الْعَالِم", "الْجَاهِل"], correct: 0 }
-                ],
-                3: [
-                    { question: "ما نوع الجمع في كلمة 'صادقون'؟", options: ["جمع مؤنث سالم", "جمع مذكر سالم", "جمع تكسير", "مفرد"], correct: 1 },
-                    { question: "ما إعراب 'المعلمُ' في 'المعلمُ مخلصٌ'؟", options: ["مبتدأ مرفوع", "خبر مرفوع", "فاعل مرفوع", "مفعول به"], correct: 0 },
-                    { question: "مرادف 'الشجاعة'؟", options: ["الجبن", "الإقدام", "الكرم", "العلم"], correct: 1 },
-                    { question: "مضاد 'الليل'؟", options: ["الصباح", "النهار", "المساء", "الفجر"], correct: 1 },
-                    { question: "جمع 'ورقة'؟", options: ["أوراق", "ورقات", "وَرَق", "جميع ما سبق"], correct: 3 },
-                    { question: "الفعل الماضي من 'يذهب'؟", options: ["ذهب", "ذاهب", "ذهاب", "يذهب"], correct: 0 },
-                    { question: "ما نوع 'يا طالبُ اجتهد'؟", options: ["نداء", "استفهام", "تعجب", "أمر"], correct: 0 },
-                    { question: "الاسم الموصول من الكلمات التالية؟", options: ["الذي", "هذا", "تلك", "أنا"], correct: 0 },
-                    { question: "حرف الجر الزائد؟", options: ["من", "إلى", "الباء", "عن"], correct: 2 },
-                    { question: "الميزان الصرفي لكلمة 'انطلق'؟", options: ["فَعَلَ", "انْفَعَلَ", "افْتَعَلَ", "فَعْلَلَ"], correct: 1 }
-                ]
+                name: "الصف الأول الابتدائي",
+                subjects: {
+                    arabic: {
+                        name: "اللغة العربية",
+                        icon: "fa-language",
+                        lessons: {
+                            lesson1: {
+                                name: "المدخل إلى النحو",
+                                description: "أساسيات النحو العربي",
+                                difficulty: "easy",
+                                questionsCount: 10,
+                                levels: {
+                                    1: [
+                                        { question: "ما نوع الجمع في كلمة 'مُعَلِّمُونَ'؟", options: ["جمع مؤنث سالم", "جمع مذكر سالم", "جمع تكسير", "مفرد"], correct: 1 },
+                                        { question: "ما إعراب كلمة 'الطالبُ' في جملة 'الطالبُ مجتهدٌ'؟", options: ["مبتدأ مرفوع", "خبر مرفوع", "فاعل مرفوع", "مفعول به منصوب"], correct: 0 },
+                                        { question: "ما معنى كلمة 'الفداء'؟", options: ["الكذب", "الظلم", "التضحية", "النصر"], correct: 2 },
+                                        { question: "ما الحرف المنطوق غير المكتوب في 'هذا'؟", options: [" النون", "اللام ", " الألف", "ليس هناك"], correct: 2 },
+                                        { question: "ما الحرف المنطوق غير المكتوب في 'رجلٌ'؟", options: [" النون", "اللام ", " الألف", "ليس هناك"], correct: 0 },
+                                        { question: "ما جمع كلمة 'كِتَاب'؟", options: ["كُتُب", "كِتَابَات", "كُتَّاب", "كِتَابُونَ"], correct: 0 },
+                                        { question: "ما الفعل الأمر من الفعل 'يَكْتُبُ'؟", options: ["اُكْتُبْ", "كُتِبَ", "اِكْتَبْ", "كَتَّبَ"], correct: 0 },
+                                        { question: "ما نوع الجملة 'الجَوُّ مُشْمِسٌ'؟", options: ["جملة اسمية", "جملة فعلية", "جملة إنشائية", "جملة طلبية"], correct: 0 },
+                                        { question: "ما إعراب كلمة 'مُجتَهدٌ' في 'الطالبُ مُجتهِدٌ'؟", options: ["حال منصوب", "مفعول به", "خبر مرفوع", "نعت منصوب"], correct: 2 },
+                                        { question: "ما مرادف كلمة 'الحَزِين'؟", options: ["الْكَئِيب", "الفَرِح", "الْمَرِح", "السَّعِيد"], correct: 0 }
+                                    ]
+                                }
+                            },
+                            lesson2: {
+                                name: "الأسماء الموصولة",
+                                description: "تعلم الأسماء الموصولة واستخداماتها",
+                                difficulty: "medium",
+                                questionsCount: 10,
+                                levels: {
+                                    1: [
+                                        { question: "من الأسماء الموصولة؟", options: ["الذي", "هذا", "تلك", "أنا"], correct: 0 },
+                                        { question: "الاسم الموصول للجمع المذكر؟", options: ["الذين", "اللاتي", "اللذان", "التي"], correct: 0 },
+                                        { question: "الاسم الموصول للمثنى المؤنث؟", options: ["اللتان", "اللذان", "الذين", "اللاتي"], correct: 0 }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    math: {
+                        name: "الرياضيات",
+                        icon: "fa-calculator",
+                        lessons: {
+                            lesson1: {
+                                name: "الجمع والطرح",
+                                description: "عمليات الجمع والطرح للأعداد",
+                                difficulty: "easy",
+                                questionsCount: 10,
+                                levels: {}
+                            }
+                        }
+                    },
+                    science: {
+                        name: "العلوم",
+                        icon: "fa-flask",
+                        lessons: {}
+                    }
+                }
             },
             grade2: {
-                1: [
-                    { question: "ما نوع الفعل 'درسَ'؟", options: ["ماض", "مضارع", "أمر", "ناسخ"], correct: 0 },
-                    { question: "جمع 'كتاب'؟", options: ["كتب", "كُتَّاب", "كِتابات", "أكتُب"], correct: 0 },
-                    { question: "الهمزة في 'أحمد' هي همزة؟", options: ["قطع", "وصل", "متوسطة", "متطرفة"], correct: 0 },
-                    { question: "اللام في 'الرجل' تسمى؟", options: ["لام القمر", "لام الشمس", "لام الأمر", "لام الجحود"], correct: 0 },
-                    { question: "ما إعراب 'السماءَ' في 'رأيتُ السماءَ صافيةً'؟", options: ["مفعول به", "مبتدأ", "خبر", "فاعل"], correct: 0 },
-                    { question: "الضمير في 'كتابي' هو؟", options: ["ياء المتكلم", "كاف الخطاب", "هاء الغائب", "نا الفاعلين"], correct: 0 },
-                    { question: "مثنى 'معلم'؟", options: ["معلمان", "معلمون", "معلمين", "معلمي"], correct: 0 },
-                    { question: "الفعل الصحيح هو؟", options: ["كتب", "قال", "باع", "سعى"], correct: 0 },
-                    { question: "الحرف الناسخ؟", options: ["إنَّ", "مِن", "عَن", "فِي"], correct: 0 },
-                    { question: "المبتدأ دائماً يكون؟", options: ["مرفوعاً", "منصوباً", "مجروراً", "مجزوماً"], correct: 0 }
-                ]
+                name: "الصف الثاني الابتدائي",
+                subjects: {
+                    arabic: {
+                        name: "اللغة العربية",
+                        icon: "fa-language",
+                        lessons: {
+                            lesson1: {
+                                name: "المبتدأ والخبر",
+                                description: "الجملة الاسمية وأركانها",
+                                difficulty: "medium",
+                                questionsCount: 10,
+                                levels: {}
+                            }
+                        }
+                    }
+                }
+            },
+            grade3: {
+                name: "الصف الثالث الابتدائي",
+                subjects: {}
+            },
+            grade4: {
+                name: "الصف الرابع الابتدائي",
+                subjects: {}
             }
         };
 
         // حالة التطبيق
         const appState = {
             selectedGrade: null,
+            selectedSubject: null,
+            selectedLesson: null,
             currentLevel: 1,
             currentQuestion: 0,
             score: 0,
             userAnswers: [],
             totalLevels: 3,
-            quizStarted: false,
             questionsData: null
         };
 
         // عناصر DOM
-        const gradeCards = document.querySelectorAll('.grade-card');
-        const startBtn = document.getElementById('startBtn');
-        const gradeWarning = document.getElementById('gradeWarning');
-        const startScreen = document.getElementById('startScreen');
+        const breadcrumbItems = document.querySelectorAll('.breadcrumb-item');
+        const gradeSection = document.getElementById('gradeSection');
+        const subjectSection = document.getElementById('subjectSection');
+        const lessonsSection = document.getElementById('lessonsSection');
+        const statsSection = document.getElementById('statsSection');
+        const levelIndicator = document.getElementById('levelIndicator');
         const quizContainer = document.getElementById('quizContainer');
         const resultContainer = document.getElementById('resultContainer');
+        const selectedGradeDisplay = document.getElementById('selectedGradeDisplay');
+        const subjectCards = document.getElementById('subjectCards');
+        const lessonsGrid = document.getElementById('lessonsGrid');
+        const subjectName = document.getElementById('subjectName');
+        const gradeName = document.getElementById('gradeName');
+        const subjectIcon = document.getElementById('subjectIcon');
+        const lessonsCount = document.getElementById('lessonsCount');
+        const totalQuestions = document.getElementById('totalQuestions');
+        const currentLessonName = document.getElementById('currentLessonName');
+        const quizLessonName = document.getElementById('quizLessonName').querySelector('span');
+        
+        // أزرار التنقل
+        const backToGrades = document.getElementById('backToGrades');
+        const backToSubjects = document.getElementById('backToSubjects');
+        const moreLessonsBtn = document.getElementById('moreLessonsBtn');
+        
+        // أزرار الاختبار
+        const startBtn = document.getElementById('startBtn'); // ملاحظة: هذا المعرف غير موجود في HTML الجديد، سنستخدم آلية أخرى
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
         const continueBtn = document.getElementById('continueBtn');
         const restartBtn = document.getElementById('restartBtn');
+        
+        // عناصر عرض البيانات
         const questionText = document.getElementById('questionText');
         const optionsContainer = document.getElementById('optionsContainer');
         const questionNum = document.getElementById('questionNum');
@@ -970,20 +1298,179 @@
         const resultTitle = document.getElementById('resultTitle');
         const resultMessage = document.getElementById('resultMessage');
         const levelUpMessage = document.getElementById('levelUpMessage');
+        const correctAnswersSpan = document.getElementById('correctAnswers');
+        const wrongAnswersSpan = document.getElementById('wrongAnswers');
+        const totalPointsSpan = document.getElementById('totalPoints');
+
+        // تحديث مسار التنقل
+        function updateBreadcrumb(activeStep) {
+            breadcrumbItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.step === activeStep) {
+                    item.classList.add('active');
+                }
+            });
+        }
 
         // اختيار الصف
-        gradeCards.forEach(card => {
+        document.querySelectorAll('.selector-card[data-grade]').forEach(card => {
             card.addEventListener('click', function() {
-                gradeCards.forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                appState.selectedGrade = 'grade' + this.dataset.grade;
-                startBtn.disabled = false;
-                gradeWarning.style.display = 'none';
+                const grade = this.dataset.grade;
+                if (grade > 4) {
+                    alert('هذا الصف سيتوفر قريباً');
+                    return;
+                }
                 
-                // تحميل بيانات الأسئلة للصف المختار
-                appState.questionsData = questionsDatabase[appState.selectedGrade] || questionsDatabase.grade1;
+                document.querySelectorAll('.selector-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                appState.selectedGrade = 'grade' + grade;
+                appState.selectedSubject = null;
+                appState.selectedLesson = null;
+                
+                // تحديث عرض الصف المختار
+                selectedGradeDisplay.textContent = schoolDatabase[appState.selectedGrade]?.name || '';
+                
+                // عرض المواد المتاحة
+                loadSubjects();
+                
+                // إخفاء الأقسام الأخرى وإظهار قسم المواد
+                gradeSection.style.display = 'none';
+                subjectSection.style.display = 'block';
+                lessonsSection.classList.remove('active');
+                statsSection.style.display = 'none';
+                levelIndicator.style.display = 'none';
+                quizContainer.classList.remove('active');
+                resultContainer.classList.remove('active');
+                
+                updateBreadcrumb('subject');
             });
         });
+
+        // تحميل المواد
+        function loadSubjects() {
+            const gradeData = schoolDatabase[appState.selectedGrade];
+            if (!gradeData) return;
+            
+            subjectCards.innerHTML = '';
+            
+            for (const [subjectKey, subject] of Object.entries(gradeData.subjects)) {
+                const lessonsCount = Object.keys(subject.lessons).length;
+                const card = document.createElement('div');
+                card.className = 'selector-card';
+                card.dataset.subject = subjectKey;
+                card.innerHTML = `
+                    <div class="card-icon"><i class="fas ${subject.icon}"></i></div>
+                    <h3>${subject.name}</h3>
+                    <p>${lessonsCount} دروس</p>
+                `;
+                
+                card.addEventListener('click', () => selectSubject(subjectKey));
+                subjectCards.appendChild(card);
+            }
+        }
+
+        // اختيار المادة
+        function selectSubject(subjectKey) {
+            appState.selectedSubject = subjectKey;
+            const gradeData = schoolDatabase[appState.selectedGrade];
+            const subjectData = gradeData.subjects[subjectKey];
+            
+            // تحديث معلومات رأس الدروس
+            subjectName.textContent = subjectData.name;
+            gradeName.textContent = gradeData.name;
+            subjectIcon.innerHTML = `<i class="fas ${subjectData.icon}"></i>`;
+            
+            const lessonsArray = Object.entries(subjectData.lessons);
+            lessonsCount.textContent = lessonsArray.length + ' دروس';
+            
+            let totalQ = 0;
+            lessonsArray.forEach(([key, lesson]) => {
+                if (lesson.levels && lesson.levels[1]) {
+                    totalQ += lesson.levels[1].length;
+                }
+            });
+            totalQuestions.textContent = totalQ + ' سؤال';
+            
+            // عرض الدروس
+            loadLessons(subjectData.lessons);
+            
+            // إظهار قسم الدروس
+            subjectSection.style.display = 'none';
+            lessonsSection.classList.add('active');
+            
+            updateBreadcrumb('lesson');
+        }
+
+        // تحميل الدروس
+        function loadLessons(lessons) {
+            lessonsGrid.innerHTML = '';
+            
+            for (const [lessonKey, lesson] of Object.entries(lessons)) {
+                const difficultyClass = {
+                    'easy': 'difficulty-easy',
+                    'medium': 'difficulty-medium',
+                    'hard': 'difficulty-hard'
+                }[lesson.difficulty] || 'difficulty-easy';
+                
+                const difficultyText = {
+                    'easy': 'سهل',
+                    'medium': 'متوسط',
+                    'hard': 'صعب'
+                }[lesson.difficulty] || 'سهل';
+                
+                const questionsCount = lesson.levels?.[1]?.length || 0;
+                const progress = lesson.progress || 0;
+                
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                card.dataset.lesson = lessonKey;
+                card.innerHTML = `
+                    <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                    <div class="lesson-icon"><i class="fas ${lesson.difficulty === 'easy' ? 'fa-smile' : 'fa-book'}"></i></div>
+                    <h4>${lesson.name}</h4>
+                    <p style="color: #666; margin-bottom: 10px;">${lesson.description || ''}</p>
+                    <div class="lesson-meta">
+                        <span><i class="fas fa-question-circle"></i> ${questionsCount} سؤال</span>
+                        <span><i class="fas fa-signal"></i> ${difficultyText}</span>
+                    </div>
+                    <div class="lesson-progress">
+                        <div class="lesson-progress-bar" style="width: ${progress}%;"></div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => selectLesson(lessonKey, lesson));
+                lessonsGrid.appendChild(card);
+            }
+        }
+
+        // اختيار الدرس
+        function selectLesson(lessonKey, lesson) {
+            appState.selectedLesson = lessonKey;
+            appState.currentLevel = 1;
+            appState.currentQuestion = 0;
+            appState.score = 0;
+            appState.userAnswers = [];
+            
+            // تحميل أسئلة المستوى الأول للدرس
+            if (lesson.levels && lesson.levels[1]) {
+                appState.questionsData = { 1: lesson.levels[1] };
+            }
+            
+            // تحديث اسم الدرس المعروض
+            currentLessonName.textContent = lesson.name;
+            quizLessonName.textContent = lesson.name;
+            
+            // إظهار أقسام الاختبار
+            lessonsSection.classList.remove('active');
+            statsSection.style.display = 'grid';
+            levelIndicator.style.display = 'flex';
+            quizContainer.classList.add('active');
+            
+            updateBreadcrumb('quiz');
+            loadQuestion();
+            updateDashboard();
+        }
 
         // تحديث لوحة المعلومات
         function updateDashboard() {
@@ -993,51 +1480,25 @@
             remainingQuestionsEl.textContent = remaining > 0 ? remaining : 0;
             scoreEl.textContent = appState.score;
             
-            // تحديث شريط التقدم
             const progressPercentValue = (appState.currentQuestion / 10) * 100;
             levelProgress.style.width = `${progressPercentValue}%`;
             progressPercent.textContent = `${Math.round(progressPercentValue)}%`;
             levelNumber.textContent = appState.currentLevel;
         }
 
-        // بدء الاختبار
-        function startQuiz() {
-            if (!appState.selectedGrade) {
-                alert('الرجاء اختيار الصف الدراسي أولاً');
-                return;
-            }
-            
-            appState.quizStarted = true;
-            appState.currentLevel = 1;
-            appState.currentQuestion = 0;
-            appState.score = 0;
-            appState.userAnswers = [];
-            
-            startScreen.style.display = 'none';
-            quizContainer.classList.add('active');
-            resultContainer.classList.remove('active');
-            
-            loadQuestion();
-            updateDashboard();
-        }
-
-        // تحميل السؤال الحالي
+        // تحميل السؤال
         function loadQuestion() {
-            if (!appState.questionsData) return;
+            if (!appState.questionsData || !appState.questionsData[appState.currentLevel]) return;
             
             const questions = appState.questionsData[appState.currentLevel];
-            if (!questions) return;
-            
             const currentQ = questions[appState.currentQuestion];
             
             questionText.textContent = currentQ.question;
             questionNum.textContent = appState.currentQuestion + 1;
             questionLevel.textContent = appState.currentLevel;
             
-            // إزالة الخيارات السابقة
             optionsContainer.innerHTML = '';
             
-            // إضافة الخيارات الجديدة
             const optionLetters = ['أ', 'ب', 'ج', 'د'];
             currentQ.options.forEach((option, index) => {
                 const optionElement = document.createElement('div');
@@ -1055,11 +1516,10 @@
                 optionsContainer.appendChild(optionElement);
             });
             
-            // تحديث حالة الأزرار
             prevBtn.disabled = appState.currentQuestion === 0;
             
             if (appState.currentQuestion === 9) {
-                nextBtn.innerHTML = 'إنهاء المستوى <i class="fas fa-flag-checkered"></i>';
+                nextBtn.innerHTML = 'إنهاء الاختبار <i class="fas fa-flag-checkered"></i>';
             } else {
                 nextBtn.innerHTML = 'التالي <i class="fas fa-arrow-left"></i>';
             }
@@ -1069,40 +1529,33 @@
 
         // اختيار إجابة
         function selectOption(optionIndex) {
-            // إزالة التحديد من جميع الخيارات
             document.querySelectorAll('.option-card').forEach(option => {
                 option.classList.remove('selected');
             });
             
-            // تحديد الخيار المختار
             document.querySelectorAll('.option-card')[optionIndex].classList.add('selected');
             
-            // حفظ الإجابة
             appState.userAnswers[appState.currentQuestion] = optionIndex;
             
-            // تحقق من الإجابة الصحيحة (بدون إضافة نقاط متكررة)
             const questions = appState.questionsData[appState.currentLevel];
             const currentQ = questions[appState.currentQuestion];
             
             if (optionIndex === currentQ.correct && !appState.userAnswers[appState.currentQuestion + 100]) {
                 appState.score += 10;
                 scoreEl.textContent = appState.score;
-                // علامة لمنع التكرار
                 appState.userAnswers[appState.currentQuestion + 100] = true;
             }
         }
 
         // السؤال التالي
         function nextQuestion() {
-            // التحقق من اختيار إجابة
             if (appState.userAnswers[appState.currentQuestion] === undefined) {
                 alert('يرجى اختيار إجابة قبل المتابعة');
                 return;
             }
             
-            // إذا كان هذا آخر سؤال في المستوى
             if (appState.currentQuestion === 9) {
-                finishLevel();
+                finishQuiz();
                 return;
             }
             
@@ -1118,41 +1571,82 @@
             }
         }
 
-        // إنهاء المستوى
-        function finishLevel() {
+        // إنهاء الاختبار
+        function finishQuiz() {
             const questions = appState.questionsData[appState.currentLevel];
             let correctAnswers = 0;
             
-            // حساب الإجابات الصحيحة
             for (let i = 0; i < questions.length; i++) {
                 if (appState.userAnswers[i] === questions[i].correct) {
                     correctAnswers++;
                 }
             }
             
-            // إظهار النتيجة
             quizContainer.classList.remove('active');
             resultContainer.classList.add('active');
             
             resultScore.textContent = `${correctAnswers * 10}/100`;
-            resultTitle.textContent = correctAnswers >= 7 ? "أحسنت! لقد اجتزت المستوى بنجاح" : "حاول مرة أخرى لتحسين نتيجتك";
+            correctAnswersSpan.textContent = correctAnswers;
+            wrongAnswersSpan.textContent = 10 - correctAnswers;
+            totalPointsSpan.textContent = appState.score;
+            
+            resultTitle.textContent = correctAnswers >= 7 ? "أحسنت! لقد اجتزت الاختبار بنجاح" : "حاول مرة أخرى لتحسين نتيجتك";
             
             if (correctAnswers >= 7) {
-                resultMessage.textContent = `أجبت على ${correctAnswers} من 10 أسئلة بشكل صحيح. يمكنك الانتقال للمستوى التالي.`;
-                
-                if (appState.currentLevel < appState.totalLevels) {
-                    continueBtn.style.display = 'inline-flex';
-                    levelUpMessage.style.display = 'flex';
-                } else {
-                    continueBtn.style.display = 'none';
-                    resultMessage.textContent += " لقد أكملت جميع المستويات! تهانينا!";
-                }
+                resultMessage.textContent = `أحسنت! لقد حصلت على ${correctAnswers} من 10 إجابات صحيحة.`;
+                continueBtn.style.display = 'inline-flex';
+                levelUpMessage.style.display = 'block';
             } else {
-                resultMessage.textContent = `أجبت على ${correctAnswers} من 10 أسئلة بشكل صحيح. تحتاج إلى 7 إجابات صحيحة على الأقل للانتقال للمستوى التالي.`;
+                resultMessage.textContent = `حصلت على ${correctAnswers} من 10 إجابات صحيحة. تحتاج إلى 7 إجابات صحيحة على الأقل للانتقال للمستوى التالي.`;
                 continueBtn.style.display = 'none';
                 levelUpMessage.style.display = 'none';
             }
         }
+
+        // العودة للصفوف
+        backToGrades.addEventListener('click', () => {
+            gradeSection.style.display = 'block';
+            subjectSection.style.display = 'none';
+            lessonsSection.classList.remove('active');
+            statsSection.style.display = 'none';
+            levelIndicator.style.display = 'none';
+            quizContainer.classList.remove('active');
+            resultContainer.classList.remove('active');
+            updateBreadcrumb('grade');
+        });
+
+        // العودة للمواد
+        backToSubjects.addEventListener('click', () => {
+            subjectSection.style.display = 'block';
+            lessonsSection.classList.remove('active');
+            statsSection.style.display = 'none';
+            levelIndicator.style.display = 'none';
+            quizContainer.classList.remove('active');
+            resultContainer.classList.remove('active');
+            updateBreadcrumb('subject');
+        });
+
+        // اختيار درس آخر من النتائج
+        moreLessonsBtn.addEventListener('click', () => {
+            lessonsSection.classList.add('active');
+            statsSection.style.display = 'none';
+            levelIndicator.style.display = 'none';
+            quizContainer.classList.remove('active');
+            resultContainer.classList.remove('active');
+            updateBreadcrumb('lesson');
+        });
+
+        // أحداث الأزرار
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+        continueBtn.addEventListener('click', nextLevel);
+        restartBtn.addEventListener('click', () => {
+            if (appState.selectedLesson) {
+                const gradeData = schoolDatabase[appState.selectedGrade];
+                const lesson = gradeData.subjects[appState.selectedSubject].lessons[appState.selectedLesson];
+                selectLesson(appState.selectedLesson, lesson);
+            }
+        });
 
         // الانتقال للمستوى التالي
         function nextLevel() {
@@ -1171,27 +1665,6 @@
                 levelUpMessage.style.display = 'none';
             }
         }
-
-        // إعادة الاختبار
-        function restartQuiz() {
-            appState.currentLevel = 1;
-            appState.currentQuestion = 0;
-            appState.score = 0;
-            appState.userAnswers = [];
-            
-            resultContainer.classList.remove('active');
-            quizContainer.classList.add('active');
-            
-            loadQuestion();
-            updateDashboard();
-        }
-
-        // أحداث الأزرار
-        startBtn.addEventListener('click', startQuiz);
-        nextBtn.addEventListener('click', nextQuestion);
-        prevBtn.addEventListener('click', prevQuestion);
-        continueBtn.addEventListener('click', nextLevel);
-        restartBtn.addEventListener('click', restartQuiz);
     </script>
 </body>
 </html>
