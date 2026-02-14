@@ -403,210 +403,210 @@ const totalPointsSpan = document.getElementById('totalPoints');
 
 
 // تكامل مع الباك إند
-const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5000/api'
-    : 'https://your-app.onrender.com/api';
+// const API_URL = window.location.hostname === 'localhost'
+//     ? 'http://localhost:5000/api'
+//     : 'https://your-app.onrender.com/api';
 
-let authToken = localStorage.getItem('token');
-let currentUser = null;
+// let authToken = localStorage.getItem('token');
+// let currentUser = null;
 
-// دوال المصادقة
-async function login(username, password) {
-    try {
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
+// // دوال المصادقة
+// async function login(username, password) {
+//     try {
+//         const response = await fetch(`${API_URL}/auth/login`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ username, password })
+//         });
 
-        const data = await response.json();
-        if (response.ok) {
-            authToken = data.token;
-            currentUser = data.user;
-            localStorage.setItem('token', authToken);
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            return { success: true };
-        } else {
-            return { success: false, error: data.error };
-        }
-    } catch (error) {
-        return { success: false, error: 'فشل الاتصال بالخادم' };
-    }
-}
+//         const data = await response.json();
+//         if (response.ok) {
+//             authToken = data.token;
+//             currentUser = data.user;
+//             localStorage.setItem('token', authToken);
+//             localStorage.setItem('user', JSON.stringify(currentUser));
+//             return { success: true };
+//         } else {
+//             return { success: false, error: data.error };
+//         }
+//     } catch (error) {
+//         return { success: false, error: 'فشل الاتصال بالخادم' };
+//     }
+// }
 
-async function fetchWithAuth(endpoint, options = {}) {
-    const headers = {
-        'Content-Type': 'application/json',
-        ...options.headers
-    };
+// async function fetchWithAuth(endpoint, options = {}) {
+//     const headers = {
+//         'Content-Type': 'application/json',
+//         ...options.headers
+//     };
 
-    if (authToken) {
-        headers['Authorization'] = `Bearer ${authToken}`;
-    }
+//     if (authToken) {
+//         headers['Authorization'] = `Bearer ${authToken}`;
+//     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+//     const response = await fetch(`${API_URL}${endpoint}`, {
+//         ...options,
+//         headers
+//     });
 
-    if (response.status === 401) {
-        // توكن غير صالح - تسجيل خروج
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.reload();
-    }
+//     if (response.status === 401) {
+//         // توكن غير صالح - تسجيل خروج
+//         localStorage.removeItem('token');
+//         localStorage.removeItem('user');
+//         window.location.reload();
+//     }
 
-    return response;
-}
+//     return response;
+// }
 
-// تحميل البيانات من الخادم
-async function loadGrades() {
-    try {
-        const response = await fetchWithAuth('/grades');
-        const grades = await response.json();
-        return grades;
-    } catch (error) {
-        console.error('خطأ في تحميل الصفوف:', error);
-        return [];
-    }
-}
+// // تحميل البيانات من الخادم
+// async function loadGrades() {
+//     try {
+//         const response = await fetchWithAuth('/grades');
+//         const grades = await response.json();
+//         return grades;
+//     } catch (error) {
+//         console.error('خطأ في تحميل الصفوف:', error);
+//         return [];
+//     }
+// }
 
-async function loadSubjects(gradeId) {
-    try {
-        const response = await fetchWithAuth(`/grades/${gradeId}/subjects`);
-        const subjects = await response.json();
-        return subjects;
-    } catch (error) {
-        console.error('خطأ في تحميل المواد:', error);
-        return [];
-    }
-}
+// async function loadSubjects(gradeId) {
+//     try {
+//         const response = await fetchWithAuth(`/grades/${gradeId}/subjects`);
+//         const subjects = await response.json();
+//         return subjects;
+//     } catch (error) {
+//         console.error('خطأ في تحميل المواد:', error);
+//         return [];
+//     }
+// }
 
-async function loadLessons(subjectId) {
-    try {
-        const response = await fetchWithAuth(`/subjects/${subjectId}/lessons`);
-        const lessons = await response.json();
-        return lessons;
-    } catch (error) {
-        console.error('خطأ في تحميل الدروس:', error);
-        return [];
-    }
-}
+// async function loadLessons(subjectId) {
+//     try {
+//         const response = await fetchWithAuth(`/subjects/${subjectId}/lessons`);
+//         const lessons = await response.json();
+//         return lessons;
+//     } catch (error) {
+//         console.error('خطأ في تحميل الدروس:', error);
+//         return [];
+//     }
+// }
 
-async function loadQuestions(lessonId, level = 1) {
-    try {
-        const response = await fetchWithAuth(`/lessons/${lessonId}/questions?level=${level}`);
-        const questions = await response.json();
-        return questions;
-    } catch (error) {
-        console.error('خطأ في تحميل الأسئلة:', error);
-        return [];
-    }
-}
+// async function loadQuestions(lessonId, level = 1) {
+//     try {
+//         const response = await fetchWithAuth(`/lessons/${lessonId}/questions?level=${level}`);
+//         const questions = await response.json();
+//         return questions;
+//     } catch (error) {
+//         console.error('خطأ في تحميل الأسئلة:', error);
+//         return [];
+//     }
+// }
 
-async function submitExamResult(lessonId, answers, score, correctAnswers, totalQuestions) {
-    try {
-        const response = await fetchWithAuth('/exam/submit', {
-            method: 'POST',
-            body: JSON.stringify({
-                lessonId,
-                answers,
-                score,
-                correctAnswers,
-                totalQuestions
-            })
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('خطأ في حفظ النتيجة:', error);
-        return null;
-    }
-}
+// async function submitExamResult(lessonId, answers, score, correctAnswers, totalQuestions) {
+//     try {
+//         const response = await fetchWithAuth('/exam/submit', {
+//             method: 'POST',
+//             body: JSON.stringify({
+//                 lessonId,
+//                 answers,
+//                 score,
+//                 correctAnswers,
+//                 totalQuestions
+//             })
+//         });
+//         return await response.json();
+//     } catch (error) {
+//         console.error('خطأ في حفظ النتيجة:', error);
+//         return null;
+//     }
+// }
 
-// التحقق من حالة تسجيل الدخول عند تحميل الصفحة
-window.addEventListener('load', () => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        // تحديث الواجهة لعرض اسم المستخدم
-    }
-});
+// // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+// window.addEventListener('load', () => {
+//     const savedUser = localStorage.getItem('user');
+//     if (savedUser) {
+//         currentUser = JSON.parse(savedUser);
+//         // تحديث الواجهة لعرض اسم المستخدم
+//     }
+// });
 
-// إضافة نموذج تسجيل الدخول في بداية الصفحة (اختياري)
-function showLoginModal() {
-    // يمكن إضافة نافذة منبثقة لتسجيل الدخول
-    const loginHtml = `
-        <div class="login-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
-            <div style="background: white; padding: 40px; border-radius: 20px; width: 400px; max-width: 90%;">
-                <h2 style="color: var(--primary-color); margin-bottom: 30px;">تسجيل الدخول</h2>
-                <input type="text" id="loginUsername" placeholder="اسم المستخدم" style="width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 10px;">
-                <input type="password" id="loginPassword" placeholder="كلمة المرور" style="width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px;">
-                <button onclick="handleLogin()" style="background: var(--gradient-primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer;">دخول</button>
-                <p style="text-align: center; margin-top: 20px; color: #666;">للتجربة: student1 / student123</p>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', loginHtml);
-}
+// // إضافة نموذج تسجيل الدخول في بداية الصفحة (اختياري)
+// function showLoginModal() {
+//     // يمكن إضافة نافذة منبثقة لتسجيل الدخول
+//     const loginHtml = `
+//         <div class="login-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+//             <div style="background: white; padding: 40px; border-radius: 20px; width: 400px; max-width: 90%;">
+//                 <h2 style="color: var(--primary-color); margin-bottom: 30px;">تسجيل الدخول</h2>
+//                 <input type="text" id="loginUsername" placeholder="اسم المستخدم" style="width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 10px;">
+//                 <input type="password" id="loginPassword" placeholder="كلمة المرور" style="width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px;">
+//                 <button onclick="handleLogin()" style="background: var(--gradient-primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer;">دخول</button>
+//                 <p style="text-align: center; margin-top: 20px; color: #666;">للتجربة: student1 / student123</p>
+//             </div>
+//         </div>
+//     `;
+//     document.body.insertAdjacentHTML('beforeend', loginHtml);
+// }
 
-async function handleLogin() {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
+// async function handleLogin() {
+//     const username = document.getElementById('loginUsername').value;
+//     const password = document.getElementById('loginPassword').value;
 
-    const result = await login(username, password);
-    if (result.success) {
-        document.querySelector('.login-modal').remove();
-        // تحديث الواجهة للمستخدم المسجل
-        loadUserData();
-    } else {
-        alert(result.error);
-    }
-}
+//     const result = await login(username, password);
+//     if (result.success) {
+//         document.querySelector('.login-modal').remove();
+//         // تحديث الواجهة للمستخدم المسجل
+//         loadUserData();
+//     } else {
+//         alert(result.error);
+//     }
+// }
 
-// تعديل دوال تحميل البيانات السابقة لاستخدام API
-async function loadSubjectsFromAPI(gradeKey) {
-    const gradeId = gradeKey.replace('grade', '');
-    const subjects = await loadSubjects(gradeId);
+// // تعديل دوال تحميل البيانات السابقة لاستخدام API
+// async function loadSubjectsFromAPI(gradeKey) {
+//     const gradeId = gradeKey.replace('grade', '');
+//     const subjects = await loadSubjects(gradeId);
 
-    // تحويل البيانات إلى الصيغة المطلوبة
-    const subjectsData = {};
-    subjects.forEach(subject => {
-        subjectsData[subject.subject_name] = {
-            name: subject.subject_name,
-            icon: subject.subject_icon || 'fa-book',
-            lessons: {} // سيتم تحميلها لاحقاً
-        };
-    });
+//     // تحويل البيانات إلى الصيغة المطلوبة
+//     const subjectsData = {};
+//     subjects.forEach(subject => {
+//         subjectsData[subject.subject_name] = {
+//             name: subject.subject_name,
+//             icon: subject.subject_icon || 'fa-book',
+//             lessons: {} // سيتم تحميلها لاحقاً
+//         };
+//     });
 
-    return subjectsData;
-}
+//     return subjectsData;
+// }
 
-// إضافة زر تسجيل الدخول في الهيدر
-function addLoginButton() {
-    const header = document.querySelector('.header');
-    const loginBtn = document.createElement('button');
-    loginBtn.className = 'btn-modern primary';
-    loginBtn.style.padding = '10px 25px';
-    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
-    loginBtn.onclick = showLoginModal;
+// // إضافة زر تسجيل الدخول في الهيدر
+// function addLoginButton() {
+//     const header = document.querySelector('.header');
+//     const loginBtn = document.createElement('button');
+//     loginBtn.className = 'btn-modern primary';
+//     loginBtn.style.padding = '10px 25px';
+//     loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+//     loginBtn.onclick = showLoginModal;
 
-    if (!currentUser) {
-        header.querySelector('.header-badge').after(loginBtn);
-    }
-}
+//     if (!currentUser) {
+//         header.querySelector('.header-badge').after(loginBtn);
+//     }
+// }
 
-// استدعاء الدالة عند تحميل الصفحة
-addLoginButton();
+// // استدعاء الدالة عند تحميل الصفحة
+// addLoginButton();
 
-// تحديث مسار التنقل
-function updateBreadcrumb(activeStep) {
-    breadcrumbItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.step === activeStep) {
-            item.classList.add('active');
-        }
-    });
-}
+// // تحديث مسار التنقل
+// function updateBreadcrumb(activeStep) {
+//     breadcrumbItems.forEach(item => {
+//         item.classList.remove('active');
+//         if (item.dataset.step === activeStep) {
+//             item.classList.add('active');
+//         }
+//     });
+// }
 
 // اختيار الصف
 document.querySelectorAll('.selector-card[data-grade]').forEach(card => {
