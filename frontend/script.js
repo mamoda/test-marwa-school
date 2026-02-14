@@ -405,7 +405,7 @@ const totalPointsSpan = document.getElementById('totalPoints');
 // تكامل مع الباك إند
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:5000/api'
-    : 'https://your-app.onrender.com/api';
+    : 'https://test-marwa-school.onrender.com/';
 
 let authToken = localStorage.getItem('token');
 let currentUser = null;
